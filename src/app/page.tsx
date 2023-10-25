@@ -360,7 +360,7 @@ export default function Home() {
 
           <div className="h-16 w-full flex flex-row items-center justify-between">
             <button
-              className="p-3 pr-4 pl-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+              className="p-3 pr-1 pl-1 md:pr-3 md:pl-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
               onClick={() => setEditingData(false)}>
               Voltar para o Início
             </button>
@@ -417,7 +417,7 @@ export default function Home() {
     <div>
       <Header />
 
-      <div className="flex flex-col items-center mt-20">
+      <div className="flex flex-col items-center mt-12">
         <div className="w-10/12 flex flex-row justify-center">
           <div className="w-full text-center">
             <h1 className="text-3xl font-extrabold leading-10">Processador de dados</h1>
