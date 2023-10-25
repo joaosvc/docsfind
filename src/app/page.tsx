@@ -133,9 +133,9 @@ export default function Home() {
       CPFUsed.push(PersonData?.CPF)
 
       if (Phone?.startsWith('85') || Phone.length < 1) {
-        InvalidPhoneNumbers[key] = PersonData
-      } else {
         CorrectPhoneNumbers[key] = PersonData
+      } else {
+        InvalidPhoneNumbers[key] = PersonData
       }
     }
 
