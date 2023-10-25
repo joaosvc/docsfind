@@ -332,18 +332,18 @@ export default function Home() {
               </span>
               <span
                 onClick={() => {
-                  navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Name || '')
-                  clearCopyState()
-                  handleCopyState('Name', true)
+                  //navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Name || '')
+                  //clearCopyState()
+                  //handleCopyState('Name', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
                 Nome: {PeopleDataEditing.currentPerson?.Name || ''} {copyState.Name && '- 📝'}
               </span>
               <span
                 onClick={() => {
-                  navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Phone || '')
-                  clearCopyState()
-                  handleCopyState('Phone', true)
+                  //navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Phone || '')
+                  //clearCopyState()
+                  //handleCopyState('Phone', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
                 Telefone: {PeopleDataEditing.currentPerson?.Phone || ''} {copyState.Phone && '- 📝'}
