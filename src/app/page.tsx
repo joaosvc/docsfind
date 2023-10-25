@@ -148,9 +148,9 @@ export default function Home() {
     PeopleDataEditing.currentPerson = Object.values(CorrectPhoneNumbers)[0]
     PeopleDataEditing.data = InvalidPhoneNumbers
 
-    handlePeopleDataEditing('currentPerson', Object.values(InvalidPhoneNumbers)[0])
-    handlePeopleDataEditing('data', InvalidPhoneNumbers)
-    handlePeopleDataEditing('maxPage', Object.keys(InvalidPhoneNumbers).length - 1)
+    handlePeopleDataEditing('currentPerson', Object.values(PeopleDataEditing.data)[0])
+    handlePeopleDataEditing('data', PeopleDataEditing.data)
+    handlePeopleDataEditing('maxPage', Object.keys(PeopleDataEditing.data).length - 1)
 
     handlePeopleDataEditing('page', 0)
 
@@ -171,7 +171,7 @@ export default function Home() {
     const newPhone = document.getElementById('newPhone') as HTMLInputElement
     const newPhoneValue = newPhone.value.replace(/[^\d]/g, '')
 
-    if (newPhoneValue) {
+    if (newPhoneValue || newPhoneValue.length < 1) {
       const currentPerson = PeopleDataEditing.currentPerson as Person
       const newData = { ...PeopleDataEditing.data }
 
@@ -187,6 +187,8 @@ export default function Home() {
 
         handlePeopleDataEditing('data', newData)
         handlePeopleDataEditing('currentPerson', updatedPerson)
+
+        handlePage(1)
       } else {
         alert('Ocorreu um erro ao atualizar os dados')
       }
