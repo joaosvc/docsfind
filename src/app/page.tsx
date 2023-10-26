@@ -22,6 +22,7 @@ export default function Home() {
   const [editingData, setEditingData] = useState(false)
   const [finalizingData, setFinalizingData] = useState(false)
   const TextareaRef = useRef<HTMLTextAreaElement>(null)
+  const InputRef = useRef<HTMLInputElement>(null)
   const [copyState, SetCopyState] = useState<Record<any, boolean>>({
     CPF: false,
     Name: false,
@@ -165,6 +166,10 @@ export default function Home() {
       handlePeopleDataEditing('page', newPage)
       handlePeopleDataEditing('currentPerson', Object.values(PeopleDataEditing.data)[newPage])
     }
+
+    setTimeout(() => {
+      InputRef.current?.focus()
+    }, 1)
   }
 
   const handleUpdatePerson = () => {
@@ -332,18 +337,18 @@ export default function Home() {
               </span>
               <span
                 onClick={() => {
-                  //navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Name || '')
-                  //clearCopyState()
-                  //handleCopyState('Name', true)
+                  navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Name || '')
+                  clearCopyState()
+                  handleCopyState('Name', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
                 Nome: {PeopleDataEditing.currentPerson?.Name || ''} {copyState.Name && '- 📝'}
               </span>
               <span
                 onClick={() => {
-                  //navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Phone || '')
-                  //clearCopyState()
-                  //handleCopyState('Phone', true)
+                  navigator.clipboard.writeText(PeopleDataEditing.currentPerson?.Phone || '')
+                  clearCopyState()
+                  handleCopyState('Phone', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
                 Telefone: {PeopleDataEditing.currentPerson?.Phone || ''} {copyState.Phone && '- 📝'}
@@ -352,6 +357,7 @@ export default function Home() {
               <div className="flex flex-col items-center mt-8">
                 <label htmlFor="newPhone">Novo Telefone:</label>
                 <input
+                  ref={InputRef}
                   type="text"
                   id="newPhone"
                   className="text-center w-48 outline-none rounded-sm border border-solid border-slate-700 p-1"
@@ -391,7 +397,7 @@ export default function Home() {
         <>
           <textarea
             ref={TextareaRef}
-            style={{ height: '24rem' }}
+            style={{ height: '26rem' }}
             spellCheck="false"
             className="text-sm p-3 w-3/5 border-2 border-solid border-slate-700 
             rounded-md resize-none outline-none overflow"
