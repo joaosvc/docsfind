@@ -246,7 +246,7 @@ export default function Home() {
         <div key={key} className="flex flex-col w-6/12 text-sm font-medium">
           <span>CPF: {person.CPF}</span>
           <span>Nome: {person.Name}</span>
-          <span>Telefone: {person.Phone}</span>
+          <span>Telefone: {person.Phone ? person.Phone : 'Sem telefone'}</span>
         </div>
       )
     })
@@ -351,7 +351,7 @@ export default function Home() {
                   handleCopyState('Phone', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
-                Telefone: {PeopleDataEditing.currentPerson?.Phone || ''} {copyState.Phone && '- 📝'}
+                Telefone: {(PeopleDataEditing.currentPerson?.Phone || '') ? PeopleDataEditing.currentPerson?.Phone : 'Sem telefone'} {copyState.Phone && '- 📝'}
               </span>
 
               <div className="flex flex-col items-center mt-8">
