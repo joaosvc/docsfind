@@ -370,7 +370,7 @@ export default function Home() {
             <button
               className="p-3 pr-1 pl-1 md:pr-3 md:pl-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
               onClick={() => setEditingData(false)}>
-              Voltar para o Início
+              Voltar
             </button>
             <div className="flex flex-row gap-2 mr-1">
               {PeopleDataEditing.page === PeopleDataEditing.maxPage && (
