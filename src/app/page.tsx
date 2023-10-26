@@ -399,7 +399,7 @@ export default function Home() {
             ref={TextareaRef}
             style={{ height: '26rem' }}
             spellCheck="false"
-            className="text-sm p-3 w-3/5 border-2 border-solid border-slate-700 
+            className="text-sm p-3 w-[90rem] md:w-3/5 border-2 border-solid border-slate-700 
             rounded-md resize-none outline-none overflow"
           />
           <div>
