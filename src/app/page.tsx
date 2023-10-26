@@ -277,11 +277,11 @@ export default function Home() {
   }
 
   const ContentManager = () => {
-    setTimeout(() => {
+    /*setTimeout(() => {
       if (TextareaRef?.current) {
         TextareaRef.current.value = localStorage.getItem('PeopleContent') || ''
       }
-    }, 1)
+    }, 1)*/
 
     if (finalizingData) {
       return (
