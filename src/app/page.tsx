@@ -285,7 +285,7 @@ export default function Home() {
 
     if (finalizingData) {
       return (
-        <div className="w-6/12 flex flex-col items-center">
+        <div className="w-[90vw] md:w-6/12 flex flex-col items-center">
           <h1 className="text-xl mb-2 font-bold">Confira os dados</h1>
           <div
             className="flex flex-col text-sm p-3 h-96 w-full border-2 border-solid border-slate-700 
@@ -317,7 +317,7 @@ export default function Home() {
 
     if (editingData) {
       return (
-        <div className="flex items-center flex-col text-sm w-3/5 h-auto">
+        <div className="flex items-center flex-col text-sm w-[90vw] md:w-3/5 h-auto">
           <div
             className="w-full border-2 border-solid border-slate-700 
               rounded-md h-96">
@@ -399,7 +399,7 @@ export default function Home() {
             ref={TextareaRef}
             style={{ height: '26rem' }}
             spellCheck="false"
-            className="text-sm p-3 w-[90rem] md:w-3/5 border-2 border-solid border-slate-700 
+            className="text-sm p-3 w-[90vw] md:w-3/5 border-2 border-solid border-slate-700 
             rounded-md resize-none outline-none overflow"
           />
           <div>
