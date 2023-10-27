@@ -14,6 +14,10 @@ type PeopleDataEditing = {
   currentPerson: Person | undefined
   page: number
   maxPage: number
+  amount: {
+    Correct: number
+    Invalid: number
+  }
   data: Record<string, Person>
 }
 
@@ -21,20 +25,23 @@ export default function Home() {
   const [isEditingData, setIsEditingData] = useState(false)
   const [editingData, setEditingData] = useState(false)
   const [finalizingData, setFinalizingData] = useState(false)
-  const TextareaRef = useRef<HTMLTextAreaElement>(null)
-  const InputRef = useRef<HTMLInputElement>(null)
-  const [copyState, SetCopyState] = useState<Record<any, boolean>>({
+  const [copyState, setCopyState] = useState<Record<any, boolean>>({
     CPF: false,
     Name: false,
     Phone: false
   })
-
   const [PeopleDataEditing, setPeopleDataEditing] = useState<PeopleDataEditing>({
     currentPerson: undefined,
     page: 0,
     maxPage: 0,
+    amount: {
+      Correct: 0,
+      Invalid: 0
+    },
     data: {}
   })
+  const TextAreaRef = useRef<HTMLTextAreaElement>(null)
+  const NewPhoneInputRef = useRef<HTMLInputElement>(null)
 
   /** This is a work around */
   const copyStateScheduler = setInterval(() => {
@@ -51,7 +58,7 @@ export default function Home() {
   }
 
   const handleCopyState = (type: any, value: Boolean) => {
-    SetCopyState((prevState) => ({ ...prevState, [type]: value }))
+    setCopyState((prevState) => ({ ...prevState, [type]: value }))
   }
 
   const handlePeopleDataEditing = (type: any, value: any) => {
@@ -82,7 +89,7 @@ export default function Home() {
       const firstName = name[0]
       let secondName = name[1]
 
-      if (secondName.length <= 3) {
+      if (secondName.length <= 3 && name[2]) {
         secondName = name[2]
       }
 
@@ -116,7 +123,7 @@ export default function Home() {
   }
 
   const ProcessorHandler = () => {
-    const textareaContent = TextareaRef.current?.value || ''
+    const textareaContent = TextAreaRef.current?.value || ''
     const peopleData: Person[] = ExtractDataFromPeople(textareaContent)
 
     const CorrectPhoneNumbers: Record<string, Person> = {}
@@ -126,14 +133,15 @@ export default function Home() {
 
     for (let key in peopleData) {
       const PersonData = peopleData[key]
-      const Phone = PersonData?.Phone
+      const CPF = peopleData[key]?.CPF ?? null
+      const Phone = PersonData?.Phone ?? null
 
-      if (PersonData?.CPF && CPFUsed.includes(PersonData?.CPF)) {
+      if (!CPF || CPF.length !== 11 || CPFUsed.includes(CPF)) {
         continue
       }
       CPFUsed.push(PersonData?.CPF)
 
-      if (Phone?.startsWith('85') || Phone.length < 1) {
+      if (Phone && (Phone.startsWith('85') || Phone.length < 1)) {
         CorrectPhoneNumbers[key] = PersonData
       } else {
         InvalidPhoneNumbers[key] = PersonData
@@ -149,9 +157,16 @@ export default function Home() {
     PeopleDataEditing.currentPerson = Object.values(CorrectPhoneNumbers)[0]
     PeopleDataEditing.data = InvalidPhoneNumbers
 
+    const InvalidPhoneNumbersKeys = Object.keys(InvalidPhoneNumbers)
+
     handlePeopleDataEditing('currentPerson', Object.values(PeopleDataEditing.data)[0])
     handlePeopleDataEditing('data', PeopleDataEditing.data)
-    handlePeopleDataEditing('maxPage', Object.keys(PeopleDataEditing.data).length - 1)
+    handlePeopleDataEditing('maxPage', InvalidPhoneNumbersKeys.length - 1)
+
+    handlePeopleDataEditing('amount', {
+      Correct: Object.keys(CorrectPhoneNumbers).length,
+      Invalid: InvalidPhoneNumbersKeys.length
+    })
 
     handlePeopleDataEditing('page', 0)
 
@@ -166,10 +181,6 @@ export default function Home() {
       handlePeopleDataEditing('page', newPage)
       handlePeopleDataEditing('currentPerson', Object.values(PeopleDataEditing.data)[newPage])
     }
-
-    /*setTimeout(() => {
-      InputRef.current?.focus()
-    }, 1)*/
   }
 
   const handleUpdatePerson = () => {
@@ -278,8 +289,8 @@ export default function Home() {
 
   const ContentManager = () => {
     setTimeout(() => {
-      if (TextareaRef?.current) {
-        TextareaRef.current.value = localStorage.getItem('PeopleContent') || ''
+      if (TextAreaRef?.current) {
+        TextAreaRef.current.value = localStorage.getItem('PeopleContent') || ''
       }
     }, 1)
 
@@ -287,10 +298,18 @@ export default function Home() {
       return (
         <div className="w-[90vw] md:w-6/12 flex flex-col items-center">
           <h1 className="text-xl mb-2 font-bold">Confira os dados</h1>
-          <div
-            className="flex flex-col text-sm p-3 h-96 w-full border-2 border-solid border-slate-700 
-            rounded-sm overflow-y-scroll items-center gap-2">
-            <ListOfPeopleDataEdited />
+          <div className="flex flex-col text-sm h-96 w-full border-2 border-solid border-slate-700 rounded-sm">
+            <div className="flex flex-row justify-between p-2 w-full bg-slate-400 text-white">
+              <span>Válidos: {PeopleDataEditing.amount.Correct}</span>
+              <span>
+                Total: {PeopleDataEditing.amount.Correct + PeopleDataEditing.amount.Invalid}
+              </span>
+              <span>Inválidos: {PeopleDataEditing.amount.Invalid}</span>
+            </div>
+
+            <div className="flex flex-col text-sm p-3 h-96 w-full overflow-y-scroll items-center gap-2">
+              <ListOfPeopleDataEdited />
+            </div>
           </div>
           <div className="flex flex-row w-full mt-2 justify-between">
             <button
@@ -300,14 +319,14 @@ export default function Home() {
             </button>
             <div className="flex flex-row items-center gap-2">
               <button
-                className="p-2 pr-4 pl-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+                className="p-2 md:p-2 md:pr-4 md:pl-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
                 onClick={() => finished('success')}>
-                ✅
+                C/ Válidos
               </button>
               <button
-                className="p-2 pr-4 pl-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+                className="p-2 md:p-2 md:pr-4 md:pl-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
                 onClick={() => finished('fail')}>
-                ❌
+                C/ Inváidos
               </button>
             </div>
           </div>
@@ -321,8 +340,15 @@ export default function Home() {
           <div
             className="w-full border-2 border-solid border-slate-700 
               rounded-md h-96">
-            <div className="w-full p-1 bg-slate-400">
-              <span className="text-white">Editando dados</span>
+            <div className="p-2 pl-3 pr-3 flex flex-row justify-between w-full bg-slate-400 text-white">
+              <span>Editando dados</span>
+              <div className="flex flex-row gap-2">
+                <span>Inválidos: {PeopleDataEditing.amount.Invalid}</span>
+                <span>Válidos: {PeopleDataEditing.amount.Correct}</span>
+                <span>
+                  Total: {PeopleDataEditing.amount.Correct + PeopleDataEditing.amount.Invalid}
+                </span>
+              </div>
             </div>
 
             <div className="text-base flex flex-col mt-10 items-center">
@@ -351,13 +377,17 @@ export default function Home() {
                   handleCopyState('Phone', true)
                 }}
                 className="w-fit p-1 -mb-1 transition duration-300 rounded-md cursor-pointer hover:bg-slate-100">
-                Telefone: {(PeopleDataEditing.currentPerson?.Phone || '') ? PeopleDataEditing.currentPerson?.Phone : 'Sem telefone'} {copyState.Phone && '- 📝'}
+                Telefone:{' '}
+                {PeopleDataEditing.currentPerson?.Phone || ''
+                  ? PeopleDataEditing.currentPerson?.Phone
+                  : 'Sem telefone'}{' '}
+                {copyState.Phone && '- 📝'}
               </span>
 
               <div className="flex flex-col items-center mt-8">
                 <label htmlFor="newPhone">Novo Telefone:</label>
                 <input
-                  ref={InputRef}
+                  ref={NewPhoneInputRef}
                   type="text"
                   id="newPhone"
                   className="text-center w-48 outline-none rounded-sm border border-solid border-slate-700 p-1"
@@ -396,7 +426,7 @@ export default function Home() {
       return (
         <>
           <textarea
-            ref={TextareaRef}
+            ref={TextAreaRef}
             style={{ height: '26rem' }}
             spellCheck="false"
             className="text-sm p-3 w-[90vw] md:w-3/5 border-2 border-solid border-slate-700 
